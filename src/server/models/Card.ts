@@ -12,7 +12,11 @@ const CardSchema = new mongoose.Schema({
     effect: { type: LocalizedStringSchema, required: true },
     lore: { type: LocalizedStringSchema, required: false },
     imageUrl: { type: String, default: '' },
-    color: { type: String, default: '#6366f1' }
+    color: { type: String, default: '#6366f1' },
+    hp: { type: Number, required: false },
+    mana: { type: Number, required: false },
+    attack: { type: Number, required: false },
+    defense: { type: Number, required: false }
 }, { timestamps: true });
 
 export const CardModel = mongoose.model('Card', CardSchema);

@@ -163,6 +163,20 @@ app.delete('/api/categories/:id', async (req, res) => {
     }
 });
 
+// --- DASHBOARD ROUTE ---
+app.get('/api/dashboard/stats', async (req, res) => {
+    try {
+        const games = await GameModel.countDocuments();
+        const cards = await CardModel.countDocuments();
+        const categories = await CategoryModel.countDocuments();
+        // Since we don't have a tracking service hooked up yet, simulate visitors
+        const visitors = Math.floor(Math.random() * 300) + 100;
+        res.json({ games, cards, categories, visitors });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch dashboard stats' });
+    }
+});
+
 // --- SEED DATA ---
 // Initial data seeded into MongoDB on first run (only if collection is empty).
 // To re-seed, clear the MongoDB collections and restart the server.
