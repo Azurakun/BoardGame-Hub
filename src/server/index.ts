@@ -460,6 +460,26 @@ app.post('/api/seed', async (req, res) => {
     }
 });
 
+// --- POKEMON SEED ---
+app.post('/api/seed/pokemon', async (req, res) => {
+    try {
+        const existingPokemonGame = await GameModel.findOne({ id: 'pokemon-tcg' });
+        if (!existingPokemonGame) {
+            await GameModel.create(pokemonGameSeed);
+            console.log('Seeded Pokémon TCG game');
+        }
+        const pokemonCardCount = await CardModel.countDocuments({ gameId: 'pokemon-tcg' });
+        if (pokemonCardCount === 0) {
+            await CardModel.insertMany([...pokemonDeck1Cards, ...pokemonDeck2Cards]);
+            console.log(`Seeded ${pokemonDeck1Cards.length + pokemonDeck2Cards.length} Pokémon cards`);
+        }
+        res.json({ message: 'Pokémon seed successful', cardsAdded: pokemonDeck1Cards.length + pokemonDeck2Cards.length });
+    } catch (error) {
+        console.error('Pokémon seed failed:', error);
+        res.status(500).json({ error: 'Pokémon seed failed' });
+    }
+});
+
 app.listen(PORT, async () => {
     console.log(`Server running on port ${PORT}`);
     await autoSeed();

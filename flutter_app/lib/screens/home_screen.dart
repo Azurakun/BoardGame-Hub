@@ -6,6 +6,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../services/api_service.dart';
 import '../models/game.dart';
 import '../providers/app_state.dart';
+import '../widgets/error_retry_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -50,15 +51,28 @@ class _HomeScreenState extends State<HomeScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.red)));
+            return ErrorRetryWidget.fromSnapshot(
+              snapshot,
+              message: 'Could not load games',
+              onRetry: () => setState(() => _gamesFuture = ApiService.fetchGames()),
+            );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No games found.'));
           }
 
           final games = snapshot.data!;
 
-          return SingleChildScrollView(
-            child: Column(
+          return TweenAnimationBuilder(
+            tween: Tween<double>(begin: 0, end: 1),
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeOutCubic,
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: value,
+                child: Transform.translate(
+                  offset: Offset(0, 30 * (1 - value)),
+                  child: SingleChildScrollView(
+                    child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
@@ -207,6 +221,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 40),
               ],
             ),
+          ),
+                ),
+              );
+            },
           );
         },
       ),

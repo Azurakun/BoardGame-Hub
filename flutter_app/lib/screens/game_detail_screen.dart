@@ -28,6 +28,13 @@ class GameDetailScreen extends StatelessWidget {
                 expandedHeight: 300.0,
                 floating: false,
                 pinned: true,
+                leading: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.black54,
+                    child: const BackButton(color: Colors.white),
+                  ),
+                ),
                 flexibleSpace: FlexibleSpaceBar(
                   title: Text(game.name.get(lang), style: const TextStyle(shadows: [Shadow(color: Colors.black, blurRadius: 10)])),
                   background: Hero(

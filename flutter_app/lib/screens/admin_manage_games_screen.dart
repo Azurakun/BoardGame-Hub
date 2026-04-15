@@ -5,6 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../models/game.dart';
 import '../services/api_service.dart';
 import '../providers/app_state.dart';
+import '../widgets/error_retry_widget.dart';
 
 class AdminManageGamesScreen extends StatefulWidget {
   const AdminManageGamesScreen({super.key});
@@ -75,7 +76,11 @@ class _AdminManageGamesScreenState extends State<AdminManageGamesScreen> {
         future: _gamesFuture,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-             return Center(child: Text('Error: ${snapshot.error}', style: TextStyle(color: Theme.of(context).colorScheme.error)));
+             return ErrorRetryWidget.fromSnapshot(
+               snapshot,
+               message: 'Could not load games',
+               onRetry: _refreshGames,
+             );
           }
           if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
           

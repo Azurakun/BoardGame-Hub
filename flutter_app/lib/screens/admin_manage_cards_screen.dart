@@ -5,6 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../models/card.dart';
 import '../services/api_service.dart';
 import '../providers/app_state.dart';
+import '../widgets/error_retry_widget.dart';
 
 class AdminManageCardsScreen extends StatefulWidget {
   const AdminManageCardsScreen({super.key});
@@ -75,7 +76,11 @@ class _AdminManageCardsScreenState extends State<AdminManageCardsScreen> {
         future: _cardsFuture,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-             return Center(child: Text('Error: ${snapshot.error}', style: TextStyle(color: Theme.of(context).colorScheme.error)));
+             return ErrorRetryWidget.fromSnapshot(
+               snapshot,
+               message: 'Could not load cards',
+               onRetry: _refreshCards,
+             );
           }
           if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
           

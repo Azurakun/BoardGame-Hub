@@ -12,8 +12,9 @@ class ShellScreen extends StatelessWidget {
     final String location = GoRouterState.of(context).uri.path;
     if (location == '/') return 0;
     if (location.startsWith('/wiki') || location.startsWith('/game')) return 1;
-    if (location.startsWith('/cards')) return 2;
-    if (location.startsWith('/tools')) return 3;
+    if (location.startsWith('/search')) return 2;
+    if (location.startsWith('/cards')) return 3;
+    if (location.startsWith('/tools')) return 4;
     return 0;
   }
 
@@ -26,9 +27,12 @@ class ShellScreen extends StatelessWidget {
         context.go('/wiki');
         break;
       case 2:
-        context.go('/cards');
+        context.go('/search');
         break;
       case 3:
+        context.go('/cards');
+        break;
+      case 4:
         context.go('/tools');
         break;
     }
@@ -68,6 +72,10 @@ class ShellScreen extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Icon(LucideIcons.bookOpen),
                 label: 'Wiki',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(LucideIcons.search),
+                label: 'Search',
               ),
               BottomNavigationBarItem(
                 icon: Icon(LucideIcons.library),

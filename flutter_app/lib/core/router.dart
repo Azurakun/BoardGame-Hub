@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/shell_screen.dart';
 import '../screens/home_screen.dart';
+import '../screens/universal_search_screen.dart';
 import '../screens/wiki_screen.dart';
 import '../screens/cards_screen.dart';
 import '../screens/tools_screen.dart';
@@ -13,6 +14,13 @@ import '../screens/admin_manage_cards_screen.dart';
 import '../screens/admin_game_form_screen.dart';
 import '../screens/admin_card_form_screen.dart';
 import '../screens/card_detail_screen.dart';
+import '../screens/tools/dice_roller_screen.dart';
+import '../screens/tools/coin_flip_screen.dart';
+import '../screens/tools/score_counter_screen.dart';
+import '../screens/tools/turn_timer_screen.dart';
+import '../screens/tools/first_player_screen.dart';
+import '../screens/tools/life_counter_screen.dart';
+import '../screens/tools/spinner_screen.dart';
 import '../models/card.dart';
 import '../models/game.dart';
 
@@ -38,6 +46,10 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) => const WikiScreen(),
         ),
         GoRoute(
+          path: '/search',
+          builder: (context, state) => const UniversalSearchScreen(),
+        ),
+        GoRoute(
           path: '/cards',
           builder: (context, state) => const CardsScreen(),
         ),
@@ -54,6 +66,15 @@ final GoRouter appRouter = GoRouter(
         return GameDetailScreen(gameId: id);
       },
     ),
+    // ── Tool detail routes ──
+    GoRoute(path: '/tools/dice', builder: (context, state) => const DiceRollerScreen()),
+    GoRoute(path: '/tools/coin', builder: (context, state) => const CoinFlipScreen()),
+    GoRoute(path: '/tools/score', builder: (context, state) => const ScoreCounterScreen()),
+    GoRoute(path: '/tools/timer', builder: (context, state) => const TurnTimerScreen()),
+    GoRoute(path: '/tools/first-player', builder: (context, state) => const FirstPlayerScreen()),
+    GoRoute(path: '/tools/life-counter', builder: (context, state) => const LifeCounterScreen()),
+    GoRoute(path: '/tools/spinner', builder: (context, state) => const SpinnerScreen()),
+    // Admin routes
     GoRoute(
       path: '/admin/login',
       builder: (context, state) => const AdminLoginScreen(),

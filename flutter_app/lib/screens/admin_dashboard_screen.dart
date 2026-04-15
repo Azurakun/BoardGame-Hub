@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../providers/app_state.dart';
 import '../services/api_service.dart';
+import '../widgets/error_retry_widget.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -30,9 +31,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     if (!context.watch<AppState>().isAdminLoggedIn) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.go('/admin/login');
-      });
+      return const Scaffold(body: SizedBox.shrink());
     }
 
     return Scaffold(
@@ -69,7 +68,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const SizedBox(height: 120, child: Center(child: CircularProgressIndicator()));
                 } else if (snapshot.hasError) {
-                  return SizedBox(height: 120, child: Center(child: Text('Error: ${snapshot.error}', style: TextStyle(color: Theme.of(context).colorScheme.error))));
+                  return SizedBox(height: 200, child: ErrorRetryWidget.fromSnapshot(
+                    snapshot,
+                    message: 'Could not load dashboard stats',
+                    onRetry: _fetchStats,
+                  ));
                 }
 
                 final stats = snapshot.data!;

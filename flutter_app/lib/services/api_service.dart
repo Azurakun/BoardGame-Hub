@@ -6,11 +6,12 @@ import '../models/card.dart';
 
 class ApiService {
   // Use 10.0.2.2 for Android emulators, or use the local IP if on a real device.
-  static const String baseUrl = 'http://10.0.2.2:5000/api';
+  // For real devices on the same WiFi network, use your PC's local IP address.
+  static const String baseUrl = 'http://192.168.1.61:5000/api';
 
   static String getImageUrl(String path) {
     if (path.startsWith('http')) return path;
-    return 'http://10.0.2.2:5000$path';
+    return 'http://192.168.1.61:5000$path';
   }
 
   static Future<List<Game>> fetchGames() async {
