@@ -12,6 +12,7 @@ A full-stack, cross-platform hub designed to enhance the physical board gaming e
 The platform includes a **React/Vite Web App** backed by an Express/MongoDB server, alongside a companion **Flutter Mobile App**.
 
 > 🎨 Original Draft: [Figma Prototype v1](https://www.figma.com/design/AcjqmGDT8HVRAHGobUYL7z/Digital-Boardgame-Companion-Platform)
+
 > 🎨 Mockup by [@BintangPrasetyo95](https://github.com/BintangPrasetyo95): [Figma Prototype v2](https://www.figma.com/design/WmTP1spQbimH6kQPlogjGS/Boardgame-Hub?node-id=0-1&t=rhXmGp1Ll6dt94Hb-1)
 
 ---
