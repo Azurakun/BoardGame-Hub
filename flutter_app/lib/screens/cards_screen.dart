@@ -8,6 +8,7 @@ import '../models/card.dart';
 import '../providers/app_state.dart';
 import '../widgets/error_retry_widget.dart';
 import '../widgets/filter_sort_bar.dart';
+import '../utils/l10n.dart';
 
 class CardsScreen extends StatefulWidget {
   const CardsScreen({super.key});
@@ -72,13 +73,13 @@ class _CardsScreenState extends State<CardsScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Scaffold(
-              appBar: AppBar(title: const Text('Card Compendium', style: TextStyle(fontWeight: FontWeight.bold))),
+              appBar: AppBar(title: Text(L10n.t(lang, 'titleCards'), style: const TextStyle(fontWeight: FontWeight.bold))),
               body: ErrorRetryWidget.fromSnapshot(snapshot, message: 'Could not load cards', onRetry: _refreshCards),
             );
           }
           if (!snapshot.hasData) {
             return Scaffold(
-              appBar: AppBar(title: const Text('Card Compendium', style: TextStyle(fontWeight: FontWeight.bold))),
+              appBar: AppBar(title: Text(L10n.t(lang, 'titleCards'), style: const TextStyle(fontWeight: FontWeight.bold))),
               body: const Center(child: CircularProgressIndicator()),
             );
           }
@@ -93,13 +94,13 @@ class _CardsScreenState extends State<CardsScreen> {
             showFilters: _showFilters,
             searchQuery: _searchQuery,
             sortOption: _sortOption,
-            sortOptions: const ['Name (A-Z)', 'Name (Z-A)', 'Type'],
-            searchHint: 'Search cards by name or effect...',
+            sortOptions: [L10n.t(lang, 'sortNameAZ'), L10n.t(lang, 'sortNameZA'), L10n.t(lang, 'sortType')],
+            searchHint: L10n.t(lang, 'searchHintCards'),
             resultCount: cards.length,
-            resultLabel: 'card',
+            resultLabel: '',
             filterCategories: [
               FilterCategory(
-                label: 'Type',
+                label: L10n.t(lang, 'sortType'),
                 options: types,
                 selected: _selectedType,
                 onSelected: (v) => setState(() => _selectedType = v),
@@ -129,7 +130,7 @@ class _CardsScreenState extends State<CardsScreen> {
             children: [
               // Standard AppBar with unified toolbar actions
               AppBar(
-                title: const Text('Card Compendium', style: TextStyle(fontWeight: FontWeight.bold)),
+                title: Text(L10n.t(lang, 'titleCards'), style: const TextStyle(fontWeight: FontWeight.bold)),
                 actions: toolbar.buildActions(context),
               ),
               // Standard toolbar body (search, filters, count)
@@ -137,7 +138,7 @@ class _CardsScreenState extends State<CardsScreen> {
               // Content
               Expanded(
                 child: cards.isEmpty
-                    ? const EmptyFilterResult(message: 'No cards match your filters')
+                    ? EmptyFilterResult(message: L10n.t(lang, 'emptyResultCards'))
                     : context.watch<AppState>().isGridView
                         ? _buildGridView(cards, lang)
                         : _buildListView(cards, lang),

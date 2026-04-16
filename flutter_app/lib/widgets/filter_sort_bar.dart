@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_state.dart';
+import '../utils/l10n.dart';
 
 /// A data class that holds a single filter category with selectable options.
 class FilterCategory {
@@ -125,6 +126,7 @@ class FilterSortBar {
   /// Builds the body header column: search field + filter panel + result count.
   Widget buildBody(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final lang = context.watch<AppState>().language;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -182,7 +184,7 @@ class FilterSortBar {
                         children: [
                           Icon(LucideIcons.arrowUpDown, size: 16, color: colorScheme.primary),
                           const SizedBox(width: 8),
-                          Text('Sort', style: TextStyle(fontWeight: FontWeight.bold, color: colorScheme.primary, fontSize: 13)),
+                          Text(L10n.t(lang, 'navSearch') == 'Cari' ? 'Urutkan' : 'Sort', style: TextStyle(fontWeight: FontWeight.bold, color: colorScheme.primary, fontSize: 13)),
                           const SizedBox(width: 12),
                           Expanded(
                             child: DropdownButtonHideUnderline(
@@ -213,7 +215,7 @@ class FilterSortBar {
                               spacing: 6,
                               runSpacing: 4,
                               children: [
-                                _FilterChip(label: 'All', selected: cat.selected == 'All', onTap: () => cat.onSelected('All')),
+                                _FilterChip(label: L10n.t(lang, 'all'), selected: cat.selected == 'All', onTap: () => cat.onSelected('All')),
                                 ...cat.options.map((o) => _FilterChip(label: o, selected: cat.selected == o, onTap: () => cat.onSelected(o))),
                               ],
                             ),
@@ -232,7 +234,7 @@ class FilterSortBar {
           child: Row(
             children: [
               Text(
-                '$resultCount $resultLabel${resultCount == 1 ? '' : 's'} found',
+                '$resultCount $resultLabel ${L10n.t(lang, 'found')}',
                 style: TextStyle(fontSize: 13, color: colorScheme.onSurface.withOpacity(0.5), fontWeight: FontWeight.bold),
               ),
               const Spacer(),
@@ -243,7 +245,7 @@ class FilterSortBar {
                     children: [
                       Icon(LucideIcons.x, size: 14, color: colorScheme.error),
                       const SizedBox(width: 4),
-                      Text('Clear filters', style: TextStyle(fontSize: 12, color: colorScheme.error, fontWeight: FontWeight.bold)),
+                      Text(L10n.t(lang, 'clearFilters'), style: TextStyle(fontSize: 12, color: colorScheme.error, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),

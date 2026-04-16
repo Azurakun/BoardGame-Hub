@@ -9,6 +9,7 @@ import '../models/card.dart';
 import '../models/tool_definition.dart';
 import '../providers/app_state.dart';
 import '../widgets/filter_sort_bar.dart';
+import '../utils/l10n.dart';
 
 class SearchResult {
   final String type;
@@ -129,9 +130,11 @@ class _UniversalSearchScreenState extends State<UniversalSearchScreen> {
       body: FutureBuilder<List<SearchResult>>(
         future: _searchDataFuture,
         builder: (context, snapshot) {
+          final lang = context.watch<AppState>().language;
+
           if (!snapshot.hasData) {
             return Scaffold(
-              appBar: AppBar(title: const Text('Search', style: TextStyle(fontWeight: FontWeight.bold))),
+              appBar: AppBar(title: Text(L10n.t(lang, 'titleSearch'), style: const TextStyle(fontWeight: FontWeight.bold))),
               body: const Center(child: CircularProgressIndicator()),
             );
           }
@@ -144,13 +147,13 @@ class _UniversalSearchScreenState extends State<UniversalSearchScreen> {
             showFilters: _showFilters,
             searchQuery: _searchQuery,
             sortOption: _sortOption,
-            sortOptions: const ['Name (A-Z)', 'Name (Z-A)'],
-            searchHint: 'Search anywhere...',
+            sortOptions: [L10n.t(lang, 'sortNameAZ'), L10n.t(lang, 'sortNameZA')],
+            searchHint: L10n.t(lang, 'searchHintBase'),
             resultCount: results.length,
-            resultLabel: 'match',
+            resultLabel: '', // handled generic in ID/EN well enough
             filterCategories: [
               FilterCategory(
-                label: 'Result Type',
+                label: L10n.t(lang, 'resultType'),
                 options: const {'Game', 'Card', 'Tool'},
                 selected: _selectedType,
                 onSelected: (v) => setState(() => _selectedType = v),
@@ -172,15 +175,15 @@ class _UniversalSearchScreenState extends State<UniversalSearchScreen> {
           return Column(
             children: [
               AppBar(
-                title: const Text('Search', style: TextStyle(fontWeight: FontWeight.bold)),
+                title: Text(L10n.t(lang, 'titleSearch'), style: const TextStyle(fontWeight: FontWeight.bold)),
                 actions: toolbar.buildActions(context),
               ),
               toolbar.buildBody(context),
               Expanded(
                 child: _searchQuery.isEmpty && _selectedType == 'All'
-                    ? const EmptyFilterResult(message: 'Type to discover games, cards, or tools.')
+                    ? EmptyFilterResult(message: L10n.t(lang, 'emptyResultSearch'))
                     : results.isEmpty
-                        ? const EmptyFilterResult(message: 'No results found.')
+                        ? EmptyFilterResult(message: L10n.t(lang, 'emptyResultEmpty'))
                         : context.watch<AppState>().isGridView
                             ? _buildGridView(results)
                             : _buildListView(results),

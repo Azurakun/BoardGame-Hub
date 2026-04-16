@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../widgets/animated_background.dart';
+import 'package:provider/provider.dart';
+import '../providers/app_state.dart';
+import '../utils/l10n.dart';
 
 class ShellScreen extends StatelessWidget {
   final Widget child;
@@ -41,6 +44,7 @@ class ShellScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int currentIndex = _calculateSelectedIndex(context);
+    final lang = context.watch<AppState>().language;
 
     return Scaffold(
       body: AnimatedBackground(child: child),
@@ -64,26 +68,26 @@ class ShellScreen extends StatelessWidget {
             selectedItemColor: Theme.of(context).colorScheme.primary,
             unselectedItemColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
             elevation: 0,
-            items: const [
+            items: [
               BottomNavigationBarItem(
-                icon: Icon(LucideIcons.home),
-                label: 'Home',
+                icon: const Icon(LucideIcons.home),
+                label: L10n.t(lang, 'navHome'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(LucideIcons.bookOpen),
-                label: 'Wiki',
+                icon: const Icon(LucideIcons.bookOpen),
+                label: L10n.t(lang, 'navWiki'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(LucideIcons.search),
-                label: 'Search',
+                icon: const Icon(LucideIcons.search),
+                label: L10n.t(lang, 'navSearch'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(LucideIcons.library),
-                label: 'Cards',
+                icon: const Icon(LucideIcons.library),
+                label: L10n.t(lang, 'navCards'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(LucideIcons.wrench),
-                label: 'Tools',
+                icon: const Icon(LucideIcons.wrench),
+                label: L10n.t(lang, 'navTools'),
               ),
             ],
           ),

@@ -3,8 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_state.dart';
+import '../providers/app_state.dart';
 import '../models/tool_definition.dart';
 import '../widgets/filter_sort_bar.dart';
+import '../utils/l10n.dart';
 
 class ToolsScreen extends StatefulWidget {
   const ToolsScreen({super.key});
@@ -21,15 +23,16 @@ class _ToolsScreenState extends State<ToolsScreen> {
   String _selectedCategory = 'All';
 
   List<ToolDefinition> get _filteredTools {
+    final lang = context.watch<AppState>().language;
     var tools = ToolDefinition.allTools.where((t) {
       final nameMatch = t.name.toLowerCase().contains(_searchQuery);
       final catMatch = _selectedCategory == 'All' || t.category == _selectedCategory;
       return nameMatch && catMatch;
     }).toList();
 
-    if (_sortOption == 'Name (A-Z)') {
+    if (_sortOption == L10n.t(lang, 'sortNameAZ')) {
       tools.sort((a, b) => a.name.compareTo(b.name));
-    } else if (_sortOption == 'Name (Z-A)') {
+    } else if (_sortOption == L10n.t(lang, 'sortNameZA')) {
       tools.sort((a, b) => b.name.compareTo(a.name));
     }
     return tools;
@@ -172,19 +175,20 @@ class _ToolsScreenState extends State<ToolsScreen> {
   @override
   Widget build(BuildContext context) {
     final tools = _filteredTools;
+    final lang = context.watch<AppState>().language;
 
     final toolbar = FilterSortBar(
       showSearch: _showSearch,
       showFilters: _showFilters,
       searchQuery: _searchQuery,
       sortOption: _sortOption,
-      sortOptions: const ['Default', 'Name (A-Z)', 'Name (Z-A)'],
-      searchHint: 'Search tools...',
+      sortOptions: [L10n.t(lang, 'sortDefault'), L10n.t(lang, 'sortNameAZ'), L10n.t(lang, 'sortNameZA')],
+      searchHint: L10n.t(lang, 'searchHintTools'),
       resultCount: tools.length,
-      resultLabel: 'tool',
+      resultLabel: '',
       filterCategories: [
         FilterCategory(
-          label: 'Category',
+          label: L10n.t(lang, 'category'),
           options: _categories,
           selected: _selectedCategory,
           onSelected: (v) => setState(() => _selectedCategory = v),
@@ -205,7 +209,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Game Tools', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(L10n.t(lang, 'titleTools'), style: const TextStyle(fontWeight: FontWeight.bold)),
         actions: toolbar.buildActions(context),
       ),
       body: Column(
@@ -213,7 +217,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
           toolbar.buildBody(context),
           Expanded(
             child: tools.isEmpty
-                ? const EmptyFilterResult(message: 'No tools match your filters')
+                ? EmptyFilterResult(message: L10n.t(lang, 'emptyResultTools'))
                 : context.watch<AppState>().isGridView
                     ? _buildGrid(tools)
                     : _buildList(tools),

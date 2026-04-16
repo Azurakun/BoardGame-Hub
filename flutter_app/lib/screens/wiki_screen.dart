@@ -7,6 +7,7 @@ import '../models/game.dart';
 import '../providers/app_state.dart';
 import '../widgets/error_retry_widget.dart';
 import '../widgets/filter_sort_bar.dart';
+import '../utils/l10n.dart';
 
 class WikiScreen extends StatefulWidget {
   const WikiScreen({super.key});
@@ -96,13 +97,13 @@ class _WikiScreenState extends State<WikiScreen> {
             showFilters: _showFilters,
             searchQuery: _searchQuery,
             sortOption: _sortOption,
-            sortOptions: const ['Name (A-Z)', 'Name (Z-A)', 'Playtime', 'Players'],
-            searchHint: 'Search games by name or description...',
+            sortOptions: [L10n.t(lang, 'sortNameAZ'), L10n.t(lang, 'sortNameZA'), L10n.t(lang, 'sortPlaytime'), L10n.t(lang, 'sortPlayers')],
+            searchHint: L10n.t(lang, 'searchHintWiki'),
             resultCount: games.length,
-            resultLabel: 'game',
+            resultLabel: '',
             filterCategories: [
               FilterCategory(
-                label: 'Category',
+                label: L10n.t(lang, 'category'),
                 options: categories,
                 selected: _selectedCategory,
                 onSelected: (v) => setState(() => _selectedCategory = v),
@@ -125,7 +126,7 @@ class _WikiScreenState extends State<WikiScreen> {
             children: [
               // Standard AppBar with unified toolbar actions + theme/lang toggles
               AppBar(
-                title: const Text('Game Library', style: TextStyle(fontWeight: FontWeight.bold)),
+                title: Text(L10n.t(lang, 'titleWiki'), style: const TextStyle(fontWeight: FontWeight.bold)),
                 actions: toolbar.buildActions(context),
               ),
               // Standard toolbar body
@@ -133,7 +134,7 @@ class _WikiScreenState extends State<WikiScreen> {
               // Content
               Expanded(
                 child: games.isEmpty
-                    ? const EmptyFilterResult(message: 'No games match your filters')
+                    ? EmptyFilterResult(message: L10n.t(lang, 'emptyResultGames'))
                     : context.watch<AppState>().isGridView
                         ? _buildGridView(games, lang)
                         : _buildListView(games, lang),
@@ -147,7 +148,7 @@ class _WikiScreenState extends State<WikiScreen> {
 
   AppBar _buildPlainAppBar(BuildContext context, String lang) {
     return AppBar(
-      title: const Text('Game Library', style: TextStyle(fontWeight: FontWeight.bold)),
+      title: Text(L10n.t(lang, 'titleWiki'), style: const TextStyle(fontWeight: FontWeight.bold)),
       actions: [
         IconButton(
           icon: Icon(context.watch<AppState>().isDarkMode ? LucideIcons.sun : LucideIcons.moon),
