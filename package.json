@@ -6,7 +6,8 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "server": "tsx src/server/index.ts"
+    "server": "tsx src/server/index.ts",
+    "start": "tsx src/server/index.ts"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
