@@ -5,13 +5,22 @@ import '../models/game.dart';
 import '../models/card.dart';
 
 class ApiService {
-  // Use 10.0.2.2 for Android emulators, or use the local IP if on a real device.
-  // For real devices on the same WiFi network, use your PC's local IP address.
-  static const String baseUrl = 'http://192.168.1.61:5000/api';
+  // ─────────────────────────────────────────────────────────────
+  // 🌐 SERVER URL CONFIGURATION
+  // After deploying to Render.com, replace the URL below with
+  // your Render service URL, e.g.:
+  //   'https://boardgame-companion-api.onrender.com'
+  //
+  // For local development only:
+  //   Android emulator : 'http://10.0.2.2:5000'
+  //   Real device (WiFi): 'http://192.168.1.61:5000'
+  // ─────────────────────────────────────────────────────────────
+  static const String _serverBase = 'http://192.168.1.61:5000';
+  static const String baseUrl = '$_serverBase/api';
 
   static String getImageUrl(String path) {
     if (path.startsWith('http')) return path;
-    return 'http://192.168.1.61:5000$path';
+    return '$_serverBase$path';
   }
 
   static Future<List<Game>> fetchGames() async {
