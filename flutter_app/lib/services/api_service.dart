@@ -15,7 +15,7 @@ class ApiService {
   //   Android emulator : 'http://10.0.2.2:5000'
   //   Real device (WiFi): 'http://192.168.1.61:5000'
   // ─────────────────────────────────────────────────────────────
-  static const String _serverBase = 'http://192.168.1.61:5000';
+  static const String _serverBase = 'https://board-game-hub-two.vercel.app/';
   static const String baseUrl = '$_serverBase/api';
 
   static String getImageUrl(String path) {

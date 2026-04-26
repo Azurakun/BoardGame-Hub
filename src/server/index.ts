@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { createClient } from '@supabase/supabase-js';
 import { CardModel } from './models/Card.js';
 import { GameModel } from './models/Game.js';
 import { CategoryModel } from './models/Category.js';
@@ -23,16 +24,14 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 // Multer Storage Configuration
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, uploadDir);
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    }
-});
+const storage = multer.memoryStorage(); // Use memory storage since we send it to Supabase immediately
 const upload = multer({ storage: storage });
+
+// Supabase Configuration
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_KEY || '';
+// Initialize only if keys exist (prevents crashing if user forgets to add them)
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/boardgame-companion';
@@ -42,12 +41,44 @@ mongoose.connect(MONGODB_URI)
     .catch(err => console.error('MongoDB connection error:', err));
 
 // --- UPLOAD ROUTE ---
-app.post('/api/upload', upload.single('image'), (req, res) => {
+app.post('/api/upload', upload.single('image'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
     }
-    // Return the relative URL path to the file
-    res.status(201).json({ url: `/uploads/${req.file.filename}` });
+    
+    try {
+        if (!supabase) {
+            console.warn('Supabase env vars missing. Ensure SUPABASE_URL and SUPABASE_KEY are set.');
+            return res.status(500).json({ error: 'Cloud storage is not configured.' });
+        }
+
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        // Replace spaces with underscores to prevent URL issues
+        const safeName = req.file.originalname.replace(/\s+/g, '_');
+        const fileName = `${uniqueSuffix}-${safeName}`;
+        
+        const { data, error } = await supabase.storage
+            .from('boardgame-assets') // Make sure you create this bucket in Supabase!
+            .upload(fileName, req.file.buffer, {
+                contentType: req.file.mimetype,
+                upsert: false
+            });
+
+        if (error) {
+            console.error('Supabase upload error:', error.message);
+            return res.status(500).json({ error: 'Failed to upload to cloud storage' });
+        }
+
+        const { data: publicUrlData } = supabase.storage
+            .from('boardgame-assets')
+            .getPublicUrl(fileName);
+
+        // Return the full public URL from Supabase
+        res.status(201).json({ url: publicUrlData.publicUrl });
+    } catch (err) {
+        console.error('Unexpected upload error:', err);
+        res.status(500).json({ error: 'Failed to process upload' });
+    }
 });
 
 // --- CARD ROUTES ---
