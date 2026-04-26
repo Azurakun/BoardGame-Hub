@@ -15,7 +15,7 @@ class ApiService {
   //   Android emulator : 'http://10.0.2.2:5000'
   //   Real device (WiFi): 'http://192.168.1.61:5000'
   // ─────────────────────────────────────────────────────────────
-  static const String _serverBase = 'https://board-game-hub-two.vercel.app/';
+  static const String _serverBase = 'https://board-game-hub-two.vercel.app';
   static const String baseUrl = '$_serverBase/api';
 
   static String getImageUrl(String path) {
@@ -72,7 +72,7 @@ class ApiService {
       body: json.encode(game.toJson()),
     );
     if (response.statusCode != 201 && response.statusCode != 200) {
-      throw Exception('Failed to create game');
+      throw Exception('Failed to create game: ${response.body}');
     }
   }
 
@@ -83,7 +83,7 @@ class ApiService {
       body: json.encode(game.toJson()),
     );
     if (response.statusCode != 200) {
-      throw Exception('Failed to update game');
+      throw Exception('Failed to update game: ${response.body}');
     }
   }
 
@@ -94,7 +94,7 @@ class ApiService {
       body: json.encode(card.toJson()),
     );
     if (response.statusCode != 201 && response.statusCode != 200) {
-      throw Exception('Failed to create card');
+      throw Exception('Failed to create card: ${response.body}');
     }
   }
 
@@ -105,7 +105,7 @@ class ApiService {
       body: json.encode(card.toJson()),
     );
     if (response.statusCode != 200) {
-      throw Exception('Failed to update card');
+      throw Exception('Failed to update card: ${response.body}');
     }
   }
 

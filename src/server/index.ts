@@ -98,8 +98,8 @@ app.post('/api/cards', async (req, res) => {
         const newCard = new CardModel(req.body);
         const savedCard = await newCard.save();
         res.status(201).json({ ...savedCard.toObject(), id: savedCard._id.toString() });
-    } catch (error) {
-        res.status(400).json({ error: 'Failed to create card' });
+    } catch (error: any) {
+        res.status(400).json({ error: 'Failed to create card', details: error.message || error });
     }
 });
 
@@ -109,8 +109,8 @@ app.put('/api/cards/:id', async (req, res) => {
         const updatedCard = await CardModel.findByIdAndUpdate(id, req.body, { new: true });
         if (!updatedCard) return res.status(404).json({ error: 'Card not found' });
         res.json({ ...updatedCard.toObject(), id: updatedCard._id.toString() });
-    } catch (error) {
-        res.status(400).json({ error: 'Failed to update card' });
+    } catch (error: any) {
+        res.status(400).json({ error: 'Failed to update card', details: error.message || error });
     }
 });
 
@@ -139,8 +139,8 @@ app.post('/api/games', async (req, res) => {
         const newGame = new GameModel(req.body);
         const savedGame = await newGame.save();
         res.status(201).json(savedGame);
-    } catch (error) {
-        res.status(400).json({ error: 'Failed to create game' });
+    } catch (error: any) {
+        res.status(400).json({ error: 'Failed to create game', details: error.message || error });
     }
 });
 
@@ -150,8 +150,8 @@ app.put('/api/games/:id', async (req, res) => {
         const updatedGame = await GameModel.findOneAndUpdate({ id }, req.body, { new: true });
         if (!updatedGame) return res.status(404).json({ error: 'Game not found' });
         res.json(updatedGame);
-    } catch (error) {
-        res.status(400).json({ error: 'Failed to update game' });
+    } catch (error: any) {
+        res.status(400).json({ error: 'Failed to update game', details: error.message || error });
     }
 });
 
