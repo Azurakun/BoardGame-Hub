@@ -480,7 +480,12 @@ app.post('/api/seed/pokemon', async (req, res) => {
     }
 });
 
-app.listen(PORT, async () => {
-    console.log(`Server running on port ${PORT}`);
-    await autoSeed();
-});
+if (!process.env.VERCEL) {
+    app.listen(PORT, async () => {
+        console.log(`Server running on port ${PORT}`);
+        await autoSeed();
+    });
+}
+
+// Export the app for Vercel Serverless Functions
+export default app;
