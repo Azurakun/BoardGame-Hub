@@ -5,6 +5,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useCards } from '../contexts/CardsContext';
 import { useGames } from '../contexts/GamesContext';
 import { Card } from '../data/cards';
+import { getImageUrl } from '../config';
 
 type CardViewMode = 'grid' | 'list';
 
@@ -207,7 +208,7 @@ export function CardViewer() {
                                         className="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-gray-100 dark:border-slate-700 overflow-hidden cursor-pointer group flex flex-col"
                                     >
                                         <div className="aspect-[2/3] relative bg-gray-100 dark:bg-slate-900 overflow-hidden">
-                                            <img src={card.imageUrl} alt={card.name[language]} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-transform duration-500 group-hover:scale-105" />
+                                            <img src={getImageUrl(card.imageUrl)} alt={card.name[language]} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-transform duration-500 group-hover:scale-105" />
                                             <div style={{ backgroundColor: card.color + 'cc' }} className="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[10px] font-bold text-white shadow backdrop-blur-md border border-white/20">
                                                 {card.type[language]}
                                             </div>
@@ -237,7 +238,7 @@ export function CardViewer() {
                                 >
                                     {/* Thumbnail */}
                                     <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 overflow-hidden bg-gray-100 dark:bg-slate-900 m-2 rounded-lg">
-                                        <img src={card.imageUrl} alt={card.name[language]} className="w-full h-full object-cover" />
+                                        <img src={getImageUrl(card.imageUrl)} alt={card.name[language]} className="w-full h-full object-cover" />
                                     </div>
                                     {/* Info */}
                                     <div className="flex-1 py-3 pr-4 min-w-0">
@@ -307,7 +308,7 @@ export function CardViewer() {
                             </button>
 
                             <div className="w-full md:w-2/5 aspect-[3/4] md:aspect-auto md:h-full bg-slate-900 shrink-0">
-                                <img src={selectedCard.imageUrl} alt={selectedCard.name[language]} className="w-full h-full object-cover" />
+                                <img src={getImageUrl(selectedCard.imageUrl)} alt={selectedCard.name[language]} className="w-full h-full object-cover" />
                             </div>
 
                             <div className="w-full md:w-3/5 p-6 md:p-10 overflow-y-auto">

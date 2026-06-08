@@ -47,15 +47,17 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
     }
     
     try {
-        if (!supabase) {
-            console.warn('Supabase env vars missing. Ensure SUPABASE_URL and SUPABASE_KEY are set.');
-            return res.status(500).json({ error: 'Cloud storage is not configured.' });
-        }
-
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         // Replace spaces with underscores to prevent URL issues
         const safeName = req.file.originalname.replace(/\s+/g, '_');
         const fileName = `${uniqueSuffix}-${safeName}`;
+
+        if (!supabase) {
+            console.log('Supabase env vars missing. Saving upload to local storage...');
+            const filePath = path.join(uploadDir, fileName);
+            await fs.promises.writeFile(filePath, req.file.buffer);
+            return res.status(201).json({ url: `/uploads/${fileName}` });
+        }
         
         const { data, error } = await supabase.storage
             .from('boardgame-assets') // Make sure you create this bucket in Supabase!
@@ -508,6 +510,23 @@ app.post('/api/seed/pokemon', async (req, res) => {
     } catch (error) {
         console.error('Pokémon seed failed:', error);
         res.status(500).json({ error: 'Pokémon seed failed' });
+    }
+});
+
+// Serve built client frontend statically in production
+app.use(express.static(path.join(process.cwd(), 'dist')));
+
+// Wildcard client route fallback (SPA routing)
+app.get('*', (req, res) => {
+    // Exclude API and upload paths from wildcard fallback
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+        return res.status(404).json({ error: 'Not found' });
+    }
+    const distIndex = path.join(process.cwd(), 'dist', 'index.html');
+    if (fs.existsSync(distIndex)) {
+        res.sendFile(distIndex);
+    } else {
+        res.status(404).send('Frontend not built. Please run npm run build.');
     }
 });
 

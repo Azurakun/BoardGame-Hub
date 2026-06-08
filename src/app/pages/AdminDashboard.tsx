@@ -9,6 +9,7 @@ import { useGames } from '../contexts/GamesContext';
 import { useCategories } from '../contexts/CategoriesContext';
 import { Card } from '../data/cards';
 import { Game } from '../data/games';
+import { API_BASE_URL, getImageUrl } from '../config';
 
 type AdminTab = 'stats' | 'games' | 'cards' | 'logs' | 'categories';
 type CardViewMode = 'grid' | 'list';
@@ -115,13 +116,13 @@ export function AdminDashboard() {
         formData.append('image', file);
         setIsUploadingImage(true);
         try {
-            const response = await fetch('http://localhost:5000/api/upload', {
+            const response = await fetch(`${API_BASE_URL}/api/upload`, {
                 method: 'POST',
                 body: formData,
             });
             const data = await response.json();
             if (response.ok) {
-                setNewCard({ ...newCard, imageUrl: `http://localhost:5000${data.url}` });
+                setNewCard({ ...newCard, imageUrl: data.url });
             } else {
                 console.error('Upload failed:', data.error);
                 alert('Image upload failed: ' + data.error);
@@ -148,13 +149,13 @@ export function AdminDashboard() {
         formData.append('image', file);
 
         try {
-            const response = await fetch('http://localhost:5000/api/upload', {
+            const response = await fetch(`${API_BASE_URL}/api/upload`, {
                 method: 'POST',
                 body: formData,
             });
             const data = await response.json();
             if (response.ok) {
-                setGameForm({ ...gameForm, imageUrl: `http://localhost:5000${data.url}` });
+                setGameForm({ ...gameForm, imageUrl: data.url });
             } else {
                 console.error('Upload failed:', data.error);
                 alert('Image upload failed: ' + data.error);
@@ -867,7 +868,7 @@ export function AdminDashboard() {
                                                     <motion.div layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} key={card.id} className={`group bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm hover:border-indigo-500/30 transition-all ${cardView === 'list' ? 'flex flex-row items-center p-3 gap-4' : 'flex flex-col'}`}>
                                                         {cardView === 'grid' && (
                                                             <div className="aspect-[3/4] overflow-hidden bg-gray-100 dark:bg-slate-900 relative">
-                                                                <img src={card.imageUrl} alt={card.name[language]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                                                <img src={getImageUrl(card.imageUrl)} alt={card.name[language]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                                                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
                                                                     <button onClick={() => openCardEditor(card)} className="p-1.5 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 shadow-md transform hover:scale-110"><Settings className="w-3.5 h-3.5" /></button>
                                                                     <button onClick={() => deleteCard(card.id)} className="p-1.5 bg-red-500 text-white rounded-md hover:bg-red-600 shadow-md transform hover:scale-110"><Trash2 className="w-3.5 h-3.5" /></button>
@@ -876,7 +877,7 @@ export function AdminDashboard() {
                                                         )}
                                                         {cardView === 'list' && (
                                                             <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-slate-900 group-hover:shadow-md transition-shadow relative">
-                                                                <img src={card.imageUrl} alt="" className="w-full h-full object-cover" />
+                                                                <img src={getImageUrl(card.imageUrl)} alt="" className="w-full h-full object-cover" />
                                                             </div>
                                                         )}
                                                         <div className={`flex-1 flex flex-col ${cardView === 'grid' ? 'p-3' : 'overflow-hidden'}`}>
@@ -1132,7 +1133,7 @@ export function AdminDashboard() {
                                             {filteredAdminGames.map((game: any) => (
                                                 <motion.div layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} key={game.id} className="group bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm hover:border-emerald-500/30 hover:shadow-md transition-all">
                                                     <div className="aspect-[16/9] w-full bg-slate-100 dark:bg-slate-800 relative overflow-hidden">
-                                                        <img src={game.imageUrl} alt={game.name[language]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                                        <img src={getImageUrl(game.imageUrl)} alt={game.name[language]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                                                         <div className="absolute top-3 right-3 flex gap-2">
                                                             <button onClick={() => openGameEditor(game)} className="p-2 bg-black/40 hover:bg-indigo-500 text-white backdrop-blur-md rounded-lg shadow-md transition-colors"><Settings className="w-4 h-4" /></button>

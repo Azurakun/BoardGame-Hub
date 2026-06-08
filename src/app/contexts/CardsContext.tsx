@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Card } from '../data/cards';
+import { API_BASE_URL } from '../config';
 
 interface CardsContextType {
     cards: Card[];
@@ -14,7 +15,7 @@ const CardsContext = createContext<CardsContextType | undefined>(undefined);
 export function CardsProvider({ children }: { children: ReactNode }) {
     const [cards, setCards] = useState<Card[]>([]);
     const [loading, setLoading] = useState(true);
-    const API_URL = 'http://localhost:5000/api/cards';
+    const API_URL = `${API_BASE_URL}/api/cards`;
 
     useEffect(() => {
         fetch(API_URL)

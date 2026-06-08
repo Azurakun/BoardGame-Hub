@@ -3,6 +3,7 @@ import { Users, Clock, Brain, ChevronRight } from 'lucide-react';
 import { Game } from '../data/games';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useNavigate } from 'react-router';
+import { getImageUrl } from '../config';
 
 interface GameCardProps {
   game: Game;
@@ -22,7 +23,7 @@ export function GameCard({ game, variant = 'grid' }: GameCardProps) {
         {/* Image */}
         <div className="w-28 sm:w-40 md:w-48 shrink-0 relative overflow-hidden bg-gray-100 dark:bg-slate-900">
           <img
-            src={game.imageUrl}
+            src={getImageUrl(game.imageUrl)}
             alt={game.name[language]}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
@@ -81,7 +82,7 @@ export function GameCard({ game, variant = 'grid' }: GameCardProps) {
     >
       <div className="aspect-video relative overflow-hidden bg-gray-100 dark:bg-slate-900 leading-none flex items-center justify-center">
         <img
-          src={game.imageUrl}
+          src={getImageUrl(game.imageUrl)}
           alt={game.name[language]}
           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 origin-center"
         />

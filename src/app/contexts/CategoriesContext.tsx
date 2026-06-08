@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 
 export interface Category {
     id: string;
@@ -19,7 +20,7 @@ const CategoriesContext = createContext<CategoriesContextType | undefined>(undef
 
 export const CategoriesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [categories, setCategories] = useState<Category[]>([]);
-    const API_URL = 'http://localhost:5000/api/categories';
+    const API_URL = `${API_BASE_URL}/api/categories`;
 
     const fetchCategories = async () => {
         try {

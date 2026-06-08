@@ -5,16 +5,6 @@ import '../models/game.dart';
 import '../models/card.dart';
 
 class ApiService {
-  // ─────────────────────────────────────────────────────────────
-  // 🌐 SERVER URL CONFIGURATION
-  // After deploying to Render.com, replace the URL below with
-  // your Render service URL, e.g.:
-  //   'https://boardgame-companion-api.onrender.com'
-  //
-  // For local development only:
-  //   Android emulator : 'http://10.0.2.2:5000'
-  //   Real device (WiFi): 'http://192.168.1.61:5000'
-  // ─────────────────────────────────────────────────────────────
   static const String _serverBase = 'https://board-game-hub-two.vercel.app';
   static const String baseUrl = '$_serverBase/api';
 

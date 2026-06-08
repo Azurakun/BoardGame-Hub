@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: boardgame-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  app:
+    build: .
+    container_name: boardgame-app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/boardgame-companion
+      - PORT=5000
+      # Add Supabase variables here if you wish to use cloud storage instead of local storage:
+      # - SUPABASE_URL=
+      # - SUPABASE_KEY=
+    volumes:
+      - uploads-data:/app/public/uploads
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo-data:
+  uploads-data:

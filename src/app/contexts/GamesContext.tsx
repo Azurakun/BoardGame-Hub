@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Game } from '../data/games';
+import { API_BASE_URL } from '../config';
 
 interface GamesContextType {
     games: Game[];
@@ -14,7 +15,7 @@ const GamesContext = createContext<GamesContextType | undefined>(undefined);
 export function GamesProvider({ children }: { children: ReactNode }) {
     const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(true);
-    const API_URL = 'http://localhost:5000/api/games';
+    const API_URL = `${API_BASE_URL}/api/games`;
 
     useEffect(() => {
         fetch(API_URL)

@@ -10,6 +10,7 @@ function getYouTubeId(url: string): string | null {
   return match ? match[1] : null;
 }
 import { useGames } from '../contexts/GamesContext';
+import { getImageUrl } from '../config';
 
 type Tab = 'overview' | 'how-to-play' | 'rules' | 'faq';
 
@@ -56,7 +57,7 @@ export function GameDetail() {
       >
         <div className="absolute inset-0 bg-gray-900 border border-slate-800">
           <img
-            src={game.imageUrl}
+            src={getImageUrl(game.imageUrl)}
             alt={game.name[language]}
             className="w-full h-full object-cover opacity-60"
           />
